@@ -4,3 +4,6 @@ sentence-transformers
 faiss-cpu
 openai
 python-dotenv
+fastapi 
+uvicorn
+google-generativeai

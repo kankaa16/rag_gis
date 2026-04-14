@@ -1,44 +1,38 @@
-import Message from "./Message"
+import { useEffect, useRef } from "react"
 
 function ChatContainer({messages}){
 
-if(messages.length === 0){
-return(
+const bottomRef = useRef(null)
 
-<div className="chat-container welcome">
-
-<h1>RAG GIS Assistant</h1>
-
-<p>
-Ask questions about dams, lakes, reservoirs, and GIS datasets.
-</p>
-
-<div className="suggestions">
-
-<button>Dams in Bhilwara</button>
-<button>Largest reservoirs</button>
-<button>Major lakes in Bhilwara</button>
-<button>Water storage statistics</button>
-
-</div>
-
-</div>
-
-)
-}
+useEffect(()=>{
+  bottomRef.current?.scrollIntoView({behavior:"smooth"})
+},[messages])
 
 return(
+  <div className="chat-container">
 
-<div className="chat-container">
+    {messages.map((msg,i)=>(
+      <div key={i} className={`message-row ${msg.role==="user"?"user":"bot"}`}>
 
-{messages.map((msg,i)=>(
-<Message key={i} message={msg}/>
-))}
+        {msg.role==="assistant" && (
+          <div className="avatar">AI</div>
+        )}
 
-</div>
+        <div className="message-bubble">
+          {msg.content}
+        </div>
 
+        {msg.role==="user" && (
+          <div className="avatar">U</div>
+        )}
+
+      </div>
+    ))}
+
+    <div ref={bottomRef}></div>
+
+  </div>
 )
-
 }
 
 export default ChatContainer

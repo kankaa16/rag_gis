@@ -84,18 +84,34 @@ class KGRetriever:
 
         return list(results)
 
-    def dynamic_search(self, query):
+def dynamic_search(self, query):
 
-        matched_nodes=self.semantic_node_match(query)
-        results=self.generic_traverse(matched_nodes)
+    query = query.lower()
 
-        entity_nodes=[]
+    matched_nodes = self.semantic_node_match(query)
 
-        for node in results:
-            if node in self.graph:
-                for r, o in self.graph[node]:
-                    if r == "is_a":
-                        entity_nodes.append(node)
-                        break
+    results = self.generic_traverse(matched_nodes)
 
-        return entity_nodes
+    entity_nodes = []
+
+    for node in results:
+
+        if node in self.graph:
+
+            for r, o in self.graph[node]:
+
+                if r == "is_a":
+
+                    # filter by query keywords
+                    if "talab" in query and o != "talab":
+                        continue
+
+                    if "anicut" in query and o != "anicut":
+                        continue
+
+                    if "percolation" in query and o != "percolation tank":
+                        continue
+
+                    entity_nodes.append(node)
+
+    return entity_nodes

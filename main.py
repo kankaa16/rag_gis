@@ -11,6 +11,7 @@ from rag.typo_matcher import FuzzyMatcher
 from rag.kg_loader import load_kgraph
 from rag.kg_retriever import KGRetriever
 from rag.feature_matcher import FeatureMatcher
+from rag.markov_corrector import MarkovCorrector
 
 
 #loaddata
@@ -195,6 +196,8 @@ def pipeline():
 
     texts=extract_csv("data/govt.csv")
 
+    markov = MarkovCorrector(texts)
+
     emb=embedder()
     embeddings=emb.embedtext(texts)
 
@@ -211,7 +214,7 @@ def pipeline():
 
     matcher=FeatureMatcher("data/features.csv")
 
-    return retr,fuzzy,kg,matcher
+    return retr,fuzzy,kg,matcher,markov
 
 
 def main():
