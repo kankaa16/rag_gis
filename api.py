@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from main import pipeline, format_context_for_llm
 from rag.query_parser import *
 from rag.res_llm import get_resp
+from rag.query_validator import validate_query
 
 app=FastAPI()
 
@@ -27,6 +28,16 @@ class Query(BaseModel):
 def ask_question(query: Query):
 
     question=query.question
+
+    # Query validation
+    valid, error = validate_query(question)
+
+    if not valid:
+        return {
+            "status": "error",
+            "message": error
+        }
+
 
     corrected=fuzzy_matcher.correct(question)
     corrected=re.sub(r'\b(storage|tank|tanks|storage-tanks)\b','',corrected.lower())
